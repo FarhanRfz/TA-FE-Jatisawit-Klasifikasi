@@ -1,0 +1,16 @@
+.rich-text-content ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.rich-text-content ol {
+    list-style-type: decimal;
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.rich-text-content li {
+    margin-bottom: 8px;
+    margin-left: 2rem;
+}
