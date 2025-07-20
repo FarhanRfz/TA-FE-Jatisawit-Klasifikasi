@@ -54,10 +54,12 @@ const ResetPasswordPage = () => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       <div className="w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-4 md:p-8">
+        <Link to="/" className="flex flex-col items-center">
         <img src={logo} alt="Logo Puskesmas" className="w-24 md:w-32 mb-4" />
         <h1 className="text-lg md:text-xl font-bold text-green-900 text-center">
           PUSKESMAS JATISAWIT
         </h1>
+        </Link>
       </div>
       <div className="w-full md:w-1/2 bg-gray-50 flex flex-col justify-center items-center p-4 md:p-8">
         <h2 className="text-lg md:text-xl font-semibold mb-4 text-red-400 text-center">

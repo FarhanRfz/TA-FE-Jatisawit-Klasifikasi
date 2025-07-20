@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import HeroSection from "../components/Herosection";
 import anakPuzle from "../assets/image/puzle.jpg";
 import api from "../api";
+import { ToastContainer, toast } from 'react-toastify';
 
 const KlasifikasiPage = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +17,7 @@ const KlasifikasiPage = () => {
   const [hasil, setHasil] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showResult, setShowResult] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -25,6 +28,14 @@ const KlasifikasiPage = () => {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
+  const token = localStorage.getItem("token");
+  if (!token) {
+    toast.error("Anda harus login terlebih dahulu!");
+    setTimeout(() => 
+    navigate("/login"), 2500);
+    return;
+  }
+
   setLoading(true);
   setHasil(null);
 
@@ -49,7 +60,6 @@ const KlasifikasiPage = () => {
     );
 
     const result = response.data;
-
     setHasil({
       classification: result.status,
       deskripsi_status: result.deskripsi_status,
@@ -68,7 +78,6 @@ const KlasifikasiPage = () => {
   }
 };
 
-
   const handleBack = () => {
     setFormData({
       namaAnak: "",
@@ -84,7 +93,7 @@ const KlasifikasiPage = () => {
   const handleDownload = async () => {
     const token = localStorage.getItem("token");
     if (!token || !hasil?.classification_id) {
-      alert("Anda harus login dan memiliki hasil untuk mengunduh.");
+      toast.error("Anda harus login dan memiliki hasil untuk mengunduh.");
       return;
     }
 
@@ -115,7 +124,7 @@ const KlasifikasiPage = () => {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Gagal mengunduh:", error);
-      alert("Terjadi kesalahan saat mengunduh hasil.");
+      toast.error("Terjadi kesalahan saat mengunduh hasil.");
     }
   };
 
@@ -175,6 +184,8 @@ const KlasifikasiPage = () => {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded px-4 py-2"
                   placeholder="Berat dalam kilogram"
+                  min="4"
+                  max="16"
                   required
                 />
               </div>
@@ -188,6 +199,8 @@ const KlasifikasiPage = () => {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded px-4 py-2"
                   placeholder="Tinggi dalam cm"
+                  min="60"
+                  max="100"
                   required
                 />
               </div>
@@ -265,6 +278,7 @@ const KlasifikasiPage = () => {
             </div>
           </>
         )}
+        
       </div>
     </div>
   );

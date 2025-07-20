@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../api";
+import { toast } from "react-toastify";
 
 const Profil = () => {
   const [foto_bersama, setfoto_bersama] = useState(null);
@@ -68,10 +69,10 @@ const Profil = () => {
       await api.post("/profil-puskesmas", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
-      alert("Data berhasil disimpan!");
+      toast.success("Data berhasil disimpan!");
     } catch (err) {
       console.error("Gagal menyimpan data:", err);
-      alert("Gagal menyimpan data!");
+      toast.error("Gagal menyimpan data!");
     }
   };
 

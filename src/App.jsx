@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import GeneralLayouts from "./layouts/GeneralLayout";
 import HomePage from "./pages/HomePage";
 import KlasifikasiPage from "./pages/KlasifikasiPage";
@@ -43,6 +46,17 @@ function App() {
         <Route path="/admin/Data-Balita" element={<DataBalita/>} />
         <Route path="/admin/Konten" element={<KontenPage/>} />
       </Routes>
+      <ToastContainer 
+        position="top-center" 
+        autoClose={2000} 
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick 
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover 
+        draggable 
+        />
     </Router>
   );
 }

@@ -6,6 +6,7 @@ import Buttonsave from "../../../components/button/button-save";
 import Buttoncancel from "../../../components/button/button-cancel";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { toast } from "react-toastify";
 
 const Umum = () => {
   const [logoDinas, setLogoDinas] = useState(null);
@@ -92,8 +93,7 @@ const Umum = () => {
       });
       setIsModalOpen(true);
       setIsSuccess(true);
-      setModalMessage("Kontak berhasil ditambahkan");
-      setTimeout(() => setIsModalOpen(false), 2000);
+      toast.success("Kontak berhasil ditambahkan");
       await fetchKontak();
       setJenisKontak("");
       setLinkKontak("");

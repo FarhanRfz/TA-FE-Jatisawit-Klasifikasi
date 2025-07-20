@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../../../api"; // pastikan file ini mengatur base URL ke Laravel
 import Modal from "../../../components/popup/Modal";
+import { toast } from "react-toastify";
 
 const Edukasi = () => {
   const [judul, setJudul] = useState("");
@@ -37,25 +38,16 @@ const Edukasi = () => {
         deskripsi: deskripsi,
         informasi_stunting: informasi
       });
-      setIsModalOpen(true);
-      setIsSuccess(true);
-      setModalMessage("Data Edukasi Berhasil Disimpan");
-      setTimeout(() => {
-        setIsModalOpen(false);
-      }, 2000);
+      toast.success("Data Edukasi Berhasil Disimpan");
     } catch (error) {
       console.error("Gagal menyimpan edukasi:", error);
-      setIsModalOpen(true);
-      setIsSuccess(false);
-      setModalMessage("Gagal menyimpan data");
-      setTimeout(() => setIsModalOpen(false), 2000);
+      toast.error("Gagal menyimpan data");
     }
   };
 
   const handleCloseModal = () => {
   setIsModalOpen(false);
 };
-
 
   return (
     <div className="p-6 max-w-3xl mx-auto">

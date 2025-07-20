@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import api from "../../api";
 import logo from "../../assets/image/logo-puskesmas-32976.png";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -24,7 +26,7 @@ const LoginPage = () => {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
 
-      // alert("Login berhasil!");
+      toast.success("Login berhasil!");
 
       // Redirect berdasarkan role
     if (role === "admin") {
@@ -40,15 +42,17 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Logo */}
-      <div className="w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-4 md:p-8">
+      <div className="w-full md:w-1/2  flex flex-col justify-center items-center p-4 md:p-8">
+        <Link to="/" className="flex flex-col items-center">
         <img src={logo} alt="Logo Puskesmas" className="w-24 md:w-32 mb-4" />
         <h1 className="text-lg md:text-xl font-bold text-green-900 text-center">
           PUSKESMAS JATISAWIT
         </h1>
+        </Link>
       </div>
 
       {/* Form Login */}
-      <div className="w-full md:w-1/2 bg-gray-50 flex flex-col justify-center items-center p-4 md:p-8">
+      <div className="w-full md:w-1/2  flex flex-col justify-center items-center p-4 md:p-8">
         <h2 className="text-lg md:text-xl font-semibold mb-4 text-red-400 text-center">
           Login
         </h2>

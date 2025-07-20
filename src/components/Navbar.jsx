@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
+import api from "../api"; 
 import logo1 from "../assets/image/Logo_KAB_IMY.png";
 import logo2 from "../assets/image/logo-puskesmas-32976.png";
 
@@ -22,11 +23,23 @@ const Navbar = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    await api.post("/logout", {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // Jika logout berhasil, hapus token dan role dari localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     navigate("/");
-  };
+  } catch (error) {
+    console.error("Logout failed:", error);
+    // Opsional: Tampilkan pesan error ke pengguna jika logout gagal
+  }
+};
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 100);
@@ -99,27 +112,26 @@ const Navbar = () => {
 
           {/* Dropdown Layanan */}
           <li className="relative" ref={dropdownRef}>
-            <button onClick={toggleDropdown} className="flex items-center space-x-1">
-              <span>Layanan</span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
-            {isDropdownOpen && (
-              <ul className="absolute top-full left-0 mt-2 bg-white text-black shadow-md border rounded-md w-40 z-50">
-                {token && (
-                  <li>
-                    <Link to="/klasifikasi" className="block px-4 py-2 hover:bg-gray-100">
-                      Klasifikasi
-                    </Link>
-                  </li>
-                )}
-                <li>
-                  <Link to="/Edukasi-Stunting" className="block px-4 py-2 hover:bg-gray-100">
-                    Edukasi
-                  </Link>
-                </li>
-              </ul>
-            )}
-          </li>
+  <button onClick={toggleDropdown} className="flex items-center space-x-1">
+    <span>Layanan</span>
+    <ChevronDown className="w-4 h-4" />
+  </button>
+  {isDropdownOpen && (
+    <ul className="absolute top-full left-0 mt-2 bg-white text-black shadow-md border rounded-md w-40 z-50">
+      {/* Hapus {token &&} di sini */}
+      <li>
+        <Link to="/klasifikasi" className="block px-4 py-2 hover:bg-gray-100">
+          Klasifikasi
+        </Link>
+      </li>
+      <li>
+        <Link to="/Edukasi-Stunting" className="block px-4 py-2 hover:bg-gray-100">
+          Edukasi
+        </Link>
+      </li>
+    </ul>
+  )}
+</li>
         </ul>
 
         {/* Tombol Masuk atau Profil */}
