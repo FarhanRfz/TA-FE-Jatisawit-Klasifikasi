@@ -159,6 +159,12 @@ const Navbar = () => {
                   >
                     Edit Profil
                   </Link>
+                  <Link
+                    to="/riwayat-klasifikasi"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                  >
+                    Riwayat Klasifikasi
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="block px-4 py-2 hover:bg-gray-100 text-red-500 w-full text-left"
@@ -193,6 +199,13 @@ const Navbar = () => {
           onClick={() => setIsMenuOpen(false)}
         >
           Edit Profil
+        </Link>
+        <Link
+          to="/riwayat-klasifikasi"
+          className="block text-left text-blue-600 font-medium hover:underline mt-2"
+          onClick={() => setIsMenuOpen(false)}
+        >
+          Riwayat Klasifikasi
         </Link>
         <button
           onClick={() => {

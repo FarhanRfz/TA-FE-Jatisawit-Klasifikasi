@@ -25,6 +25,9 @@ const Profil = () => {
       const response = await api.get("/profil-puskesmas");
       const data = response.data;
 
+      // Bangun URL gambar berdasarkan host dasar (tanpa /api)
+        const baseUrl = "http://localhost:8000"; // Sesuaikan dengan host Anda
+
       if (data) {
         setJudul(data.judul || "");
         setDeskripsi_profil(data.deskripsi_profil || "");
@@ -35,13 +38,13 @@ const Profil = () => {
 
         // Cek dan set gambar jika ada
         if (data.foto_bersama) {
-          setPreviewfoto_bersama(`${import.meta.env.VITE_API_BASE_URL}/storage/${data.foto_bersama}`);
+          setPreviewfoto_bersama(`${baseUrl}/storage/${data.foto_bersama}`);
         }
         if (data.struktur_organisasi) {
-          setPreviewstruktur_organisasi(`${import.meta.env.VITE_API_BASE_URL}/storage/${data.struktur_organisasi}`);
+          setPreviewstruktur_organisasi(`${baseUrl}/storage/${data.struktur_organisasi}`);
         }
         if (data.peta_wilayah_kerja) {
-          setPreviewpetawilayahkerja(`${import.meta.env.VITE_API_BASE_URL}/storage/${data.peta_wilayah_kerja}`);
+          setPreviewpetawilayahkerja(`${baseUrl}/storage/${data.peta_wilayah_kerja}`);
         }
       }
     } catch (err) {

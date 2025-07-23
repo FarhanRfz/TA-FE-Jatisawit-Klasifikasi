@@ -7,7 +7,7 @@ const GeneralLayouts = ({ children }) => {
 
   const location = useLocation();
 
-  const hiddenFooterRoutes = ["/edit-profile"];
+  const hiddenFooterRoutes = ["/edit-profile", "/riwayat-klasifikasi"];
 
   const shouldHideFooter = hiddenFooterRoutes.includes(location.pathname);
 

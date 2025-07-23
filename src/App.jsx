@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import GeneralLayouts from "./layouts/GeneralLayout";
 import HomePage from "./pages/HomePage";
 import KlasifikasiPage from "./pages/KlasifikasiPage";
+import HistoryPage from "./pages/RiwayatKlasifikasiPage";
 import ProfilPage from "./pages/ProfilPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/profil" element={<ProfilPage />} />
           <Route path="/edit-profile" element={<EditProfileUser />} />
           <Route path="/Edukasi-Stunting" element={<EdukasiStuntingPage />} />
+          <Route path="/riwayat-klasifikasi" element={<HistoryPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/registrasi" element={<RegistrasiPage />} />

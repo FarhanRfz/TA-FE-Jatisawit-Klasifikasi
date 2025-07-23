@@ -1,11 +1,19 @@
-import React, { useState } from "react";
-import AdminLayout from '../../../layouts/AdminLayout';
-import UmumKonten from './Umum';
-import Profil from './Profil';
+import React, { useState, useEffect } from "react";
+import AdminLayout from "../../../layouts/AdminLayout";
+import UmumKonten from "./Umum";
+import Profil from "./Profil";
 import Edukasi from "./EdukasiStunting";
 
 const KontenPage = () => {
-  const [activeTab, setActiveTab] = useState("umum");
+  // Ambil nilai activeTab dari localStorage atau gunakan "umum" sebagai default
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem("activeTab") || "umum";
+  });
+
+  // Sinkronkan activeTab dengan localStorage saat berubah
+  useEffect(() => {
+    localStorage.setItem("activeTab", activeTab);
+  }, [activeTab]);
 
   return (
     <AdminLayout>
