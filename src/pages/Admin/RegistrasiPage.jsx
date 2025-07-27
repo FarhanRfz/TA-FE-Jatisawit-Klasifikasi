@@ -1,10 +1,11 @@
-import React, { useState } from "react";;
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api";
 import logo from "../../assets/image/logo-puskesmas-32976.png";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
-
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const RegistrasiPage = () => {
   const [username, setUsername] = useState("");
@@ -38,9 +39,21 @@ const RegistrasiPage = () => {
         password_confirmation: passwordConfirmation,
       });
       setOtpSent(true);
-      toast.success("Kode OTP sudah dikirim ke email Anda!");
+      toast.success("Kode OTP sudah dikirim ke email Anda!", { position: "top-right", autoClose: 3000 });
     } catch (err) {
-      toast.error(err.response?.data?.message || "Gagal mengirim OTP.");
+      const responseData = err.response?.data;
+      if (responseData && responseData.errors) {
+        // Tangani pesan error spesifik dari validasi
+        if (responseData.errors.username) {
+          toast.error(responseData.errors.username[0], { position: "top-right", autoClose: 3000 });
+        } else if (responseData.errors.email) {
+          toast.error(responseData.errors.email[0], { position: "top-right", autoClose: 3000 });
+        } else {
+          toast.error(responseData.message || "Gagal mengirim OTP.", { position: "top-right", autoClose: 3000 });
+        }
+      } else {
+        toast.error(err.response?.data?.message || "Gagal mengirim OTP.", { position: "top-right", autoClose: 3000 });
+      }
     }
   };
 
@@ -50,7 +63,7 @@ const RegistrasiPage = () => {
       const res = await api.post("/verify-otp", { email, otp_code: otpCode });
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
-      toast.success("Verifikasi berhasil! Anda login otomatis.");
+      toast.success("Verifikasi berhasil! Anda login otomatis.", { position: "top-right", autoClose: 3000 });
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "OTP salah atau kadaluarsa.");
@@ -59,14 +72,14 @@ const RegistrasiPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
+      <ToastContainer />
       <div className="w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-4 md:p-8">
-      <Link to="/" className="flex flex-col items-center">
-        <img src={logo} alt="Logo Puskesmas" className="w-24 md:w-32 mb-4" />
-        <h1 className="text-lg md:text-xl font-bold text-green-900 text-center">
-          PUSKESMAS JATISAWIT
-        </h1>
-      </Link>
-        
+        <Link to="/" className="flex flex-col items-center">
+          <img src={logo} alt="Logo Puskesmas" className="w-24 md:w-32 mb-4" />
+          <h1 className="text-lg md:text-xl font-bold text-green-900 text-center">
+            PUSKESMAS JATISAWIT
+          </h1>
+        </Link>
       </div>
 
       <div className="w-full md:w-1/2  flex flex-col justify-center items-center p-4 md:p-8">

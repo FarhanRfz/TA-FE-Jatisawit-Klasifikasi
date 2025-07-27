@@ -77,50 +77,54 @@ const Table = ({
             </tr>
           </thead>
           <tbody>
-            {currentRows.map((row, index) => (
-              <tr key={index}>
-                {columns.map((column, colIndex) => {
-                  const columnKey = typeof column === 'object'
-                    ? column.key
-                    : toSnakeCase(column);
-                  const unit = units[colIndex] || '';
+            {currentRows.map((row, index) => {
+              // Hitung nomor urut global berdasarkan indeks asli
+              const globalIndex = indexOfFirstRow + index;
+              return (
+                <tr key={row[idKey] || globalIndex}>
+                  {columns.map((column, colIndex) => {
+                    const columnKey = typeof column === 'object'
+                      ? column.key
+                      : toSnakeCase(column);
+                    const unit = units[colIndex] || '';
 
-                  let cellContent;
-                  if (columnKey === 'no') {
-                    cellContent = row.id_kontak || row.id || index + 1;
-                  } else {
-                    cellContent = row[columnKey];
-                  }
+                    let cellContent;
+                    if (columnKey === 'no') {
+                      cellContent = globalIndex + 1; // Nomor urut global
+                    } else {
+                      cellContent = row[columnKey];
+                    }
 
-                  return (
-                    <td key={colIndex} className="border-t px-4 py-2 text-center">
-                      {columnKey === 'gambar' || columnKey === tableImage
-                        ? cellContent && (
-                            <img
-                              src={`${imageUrl}${cellContent}`}
-                              alt={tableImage}
-                              className="w-16 h-16 object-cover mx-auto"
-                            />
-                          )
-                        : (
-                            <span>
-                              {cellContent ? `${truncateText(cellContent, 16)} ${unit}` : '-'}
-                            </span>
-                          )}
+                    return (
+                      <td key={colIndex} className="border-t px-4 py-2 text-center">
+                        {columnKey === 'gambar' || columnKey === tableImage
+                          ? cellContent && (
+                              <img
+                                src={`${imageUrl}${cellContent}`}
+                                alt={tableImage}
+                                className="w-16 h-16 object-cover mx-auto"
+                              />
+                            )
+                          : (
+                              <span>
+                                {cellContent ? `${truncateText(cellContent, 16)} ${unit}` : '-'}
+                              </span>
+                            )}
+                      </td>
+                    );
+                  })}
+                  {(buttons.show || buttons.edit || buttons.delete) && (
+                    <td className="border-t px-4 py-2">
+                      <div className="flex justify-center space-x-2">
+                        {buttons.show && <Buttonshow click={() => onShow(row)} />}
+                        {buttons.edit && <Buttonedit click={() => onEdit(row)} />}
+                        {buttons.delete && <Buttondelete click={() => onDelete(row)} />}
+                      </div>
                     </td>
-                  );
-                })}
-                {(buttons.show || buttons.edit || buttons.delete) && (
-                  <td className="border-t px-4 py-2">
-                    <div className="flex justify-center space-x-2">
-                      {buttons.show && <Buttonshow click={() => onShow(row)} />}
-                      {buttons.edit && <Buttonedit click={() => onEdit(row)} />}
-                      {buttons.delete && <Buttondelete click={() => onDelete(row[idKey])} />}
-                    </div>
-                  </td>
-                )}
-              </tr>
-            ))}
+                  )}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

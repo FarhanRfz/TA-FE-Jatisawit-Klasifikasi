@@ -1,69 +1,77 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../../../api";
 import Input from "../../../components/input/input";
 import Buttonsave from "../../../components/button/button-save";
 import Modal from "../../../components/popup/Modal";
-import Buttonback from "../../../components/button/button-back";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
 const FormAddBalita = ({ onClose, onSubmit }) => {
-  const [nama, setNama] = useState("");
-  const [orangTua, setOrangTua] = useState("");
-  const [tglLahir, setTglLahir] = useState("");
-  const [jk, setJk] = useState("Laki-Laki");
-  const [alamat, setAlamat] = useState("");
+  const [namaAnak, setNamaAnak] = useState("");
+  const [namaIbu, setNamaIbu] = useState("");
+  const [namaBapak, setNamaBapak] = useState("");
+  const [jenisKelaminAnak, setJenisKelaminAnak] = useState("Laki-Laki");
+  const [golDarahAnak, setGolDarahAnak] = useState("");
+  const [tanggalLahirAnak, setTanggalLahirAnak] = useState("");
+  const [pekerjaanIbu, setPekerjaanIbu] = useState("");
+  const [alamatRumah, setAlamatRumah] = useState("");
+  const [status, setStatus] = useState("aktif");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [isSuccess, setIsSuccess] = useState(true);
   const [modalMessage, setModalMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const token = localStorage.getItem("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
     const newBalita = {
-      nama,
-      orangTua,
-      tglLahir,
-      jk,
-      alamat,
+      nama_anak: namaAnak,
+      nama_ibu: namaIbu,
+      nama_bapak: namaBapak,
+      jenis_kelamin_anak: jenisKelaminAnak === "Laki-Laki" ? "L" : "P",
+      gol_darah_anak: golDarahAnak,
+      tanggal_lahir_anak: tanggalLahirAnak,
+      pekerjaan_ibu: pekerjaanIbu,
+      alamat_rumah: alamatRumah,
+      status: status,
     };
 
     try {
-      const response = await axios.post("http://localhost:8000/api/balita", {
-        nama,
-        orang_tua: orangTua,
-        tgl_lahir: tglLahir,
-        jk,
-        alamat,
-      });
+      const response = await api.post("/admin/ortu-anak", newBalita, token);
+      console.log("Balita added:", response);
 
-      console.log("Balita added:", response.data);
+      setNamaAnak("");
+      setNamaIbu("");
+      setNamaBapak("");
+      setJenisKelaminAnak("Laki-Laki");
+      setGolDarahAnak("");
+      setTanggalLahirAnak("");
+      setPekerjaanIbu("");
+      setAlamatRumah("");
+      setStatus("aktif");
 
-      // Reset input
-      setNama("");
-      setOrangTua("");
-      setTglLahir("");
-      setJk("Laki-Laki");
-      setAlamat("");
-
-      setIsSuccess(true);
-      setModalMessage("Data balita berhasil ditambahkan");
-      setIsModalOpen(true);
+      toast.success("Data balita berhasil ditambahkan");
 
       if (onSubmit) {
-        onSubmit(newBalita); // kirim ke DataBalita.jsx
+        const newEntry = { ...newBalita, id_ota: response.data.data.id_ota };
+        onSubmit(newEntry);
       }
 
       setTimeout(() => {
         setIsModalOpen(false);
-        onClose(); // Tutup form setelah berhasil
+        onClose();
+        setIsSubmitting(false);
       }, 2000);
     } catch (error) {
-      console.error("Error menambahkan data balita:", error);
+      console.error("Error menambahkan data balita:", error.message);
       setIsSuccess(false);
-      setModalMessage("Gagal menambahkan data balita");
-      setIsModalOpen(true);
+      toast.error(`Gagal menambahkan data balita: ${error.message}`);
+      setIsSubmitting(false);
     }
   };
 
@@ -73,44 +81,69 @@ const FormAddBalita = ({ onClose, onSubmit }) => {
 
   return (
     <div className="bg-white pb-0 mt-4 rounded-lg shadow-lg">
-      
-
-      <form onSubmit={handleSubmit} className="p-6 grid grid-cols-1 gap-4">
+      <form onSubmit={handleSubmit} className="p-6 grid grid-cols-2 gap-4">
         <Input
-          id="nama"
+          id="namaAnak"
           label="Nama Anak"
-          placeholder="Masukkan nama balita"
-          value={nama}
-          onChange={(e) => setNama(e.target.value)}
+          placeholder="Masukkan nama anak"
+          value={namaAnak}
+          onChange={(e) => setNamaAnak(e.target.value)}
           required
           type="text"
         />
         <Input
-          id="orangTua"
-          label="Nama Orang Tua"
-          placeholder="Masukkan nama orang tua"
-          value={orangTua}
-          onChange={(e) => setOrangTua(e.target.value)}
+          id="namaIbu"
+          label="Nama Ibu"
+          placeholder="Masukkan nama ibu"
+          value={namaIbu}
+          onChange={(e) => setNamaIbu(e.target.value)}
           required
           type="text"
         />
         <Input
-          id="tglLahir"
-          label="Tanggal Lahir"
+          id="namaBapak"
+          label="Nama Bapak"
+          placeholder="Masukkan nama bapak"
+          value={namaBapak}
+          onChange={(e) => setNamaBapak(e.target.value)}
+          required
+          type="text"
+        />
+        <Input
+          id="tanggalLahirAnak"
+          label="Tanggal Lahir Anak"
           placeholder=""
-          value={tglLahir}
-          onChange={(e) => setTglLahir(e.target.value)}
+          value={tanggalLahirAnak}
+          onChange={(e) => setTanggalLahirAnak(e.target.value)}
           required
           type="date"
         />
+        <Input
+          id="pekerjaanIbu"
+          label="Pekerjaan Ibu"
+          placeholder="Masukkan pekerjaan ibu"
+          value={pekerjaanIbu}
+          onChange={(e) => setPekerjaanIbu(e.target.value)}
+          required
+          type="text"
+        />
+        <Input
+          id="alamatRumah"
+          label="Alamat Rumah"
+          placeholder="Masukkan alamat"
+          value={alamatRumah}
+          onChange={(e) => setAlamatRumah(e.target.value)}
+          required
+          type="text"
+        />
         <div>
-          <label htmlFor="jk" className="block font-medium text-sm mb-1">
-            Jenis Kelamin
+          <label htmlFor="jenisKelaminAnak" className="block font-medium text-sm mb-1">
+            Jenis Kelamin Anak
           </label>
           <select
-            id="jk"
-            value={jk}
-            onChange={(e) => setJk(e.target.value)}
+            id="jenisKelaminAnak"
+            value={jenisKelaminAnak}
+            onChange={(e) => setJenisKelaminAnak(e.target.value)}
             className="w-full border rounded px-3 py-2"
             required
           >
@@ -118,17 +151,40 @@ const FormAddBalita = ({ onClose, onSubmit }) => {
             <option value="Perempuan">Perempuan</option>
           </select>
         </div>
-        <Input
-          id="alamat"
-          label="Alamat"
-          placeholder="Masukkan alamat"
-          value={alamat}
-          onChange={(e) => setAlamat(e.target.value)}
-          required
-          type="text"
-        />
-        <div className="mt-4 mb-14">
-          <Buttonsave onClick={handleSubmit} text="Simpan" />
+        <div>
+          <label htmlFor="golDarahAnak" className="block font-medium text-sm mb-1">
+            Golongan Darah Anak
+          </label>
+          <select
+            id="golDarahAnak"
+            value={golDarahAnak}
+            onChange={(e) => setGolDarahAnak(e.target.value)}
+            className="w-full border rounded px-3 py-2"
+            required
+          >
+            <option value="">Pilih Golongan Darah</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="AB">AB</option>
+            <option value="O">O</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="status" className="block font-medium text-sm mb-1">
+            Status
+          </label>
+          <select
+            id="status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-full border rounded px-3 py-2"
+          >
+            <option value="aktif">Aktif</option>
+            <option value="nonaktif">Nonaktif</option>
+          </select>
+        </div>
+        <div className="col-span-2 mt-4 mb-14 flex justify-end">
+          <Buttonsave type="submit" text="Simpan" disabled={isSubmitting} />
         </div>
       </form>
 
@@ -139,9 +195,7 @@ const FormAddBalita = ({ onClose, onSubmit }) => {
               isSuccess ? "bg-teal-300" : "bg-red-500"
             }`}
           >
-            <FontAwesomeIcon
-              icon={isSuccess ? faCheck : faExclamationTriangle}
-            />
+            <FontAwesomeIcon icon={isSuccess ? faCheck : faExclamationTriangle} />
           </div>
           <p>{modalMessage}</p>
         </div>

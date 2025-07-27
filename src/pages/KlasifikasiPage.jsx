@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HeroSection from "../components/Herosection";
 import anakPuzle from "../assets/image/puzle.jpg";
 import api from "../api";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const KlasifikasiPage = () => {
   const [formData, setFormData] = useState({
