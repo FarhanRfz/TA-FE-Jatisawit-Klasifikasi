@@ -1,17 +1,18 @@
 import React from "react";
+import { useAppContext } from "../context/AppContext"; // Impor useAppContext
 import bangunanPuskesmas from "../assets/image/bangunan puskesmas jtswit.jpg";
-import FotoKeluarga from "../assets/image/contoh-fotobersama.jpg";
 import HeroSection from "../components/Herosection";
 import ServiceCard from "../components/ServiceCard";
 
 const HomePage = () => {
+  const { profilPuskesmas, edukasiStunting } = useAppContext(); // Ambil data dari context
+
   return (
     <div className="font-sans">
       {/* HeroSection */}
       <HeroSection
         heroSectionImage={bangunanPuskesmas}
-        text="Selamat Datang Di
-        UPTD Puskesmas Jatisawit"
+        text={`Selamat Datang Di\n${profilPuskesmas.judul || "UPTD Puskesmas Jatisawit"}`}
         showButton1={true}
         showButton2={false}
         showButton3={false}
@@ -24,34 +25,26 @@ const HomePage = () => {
 
       <section className="bg-white pt-14 pb-12 px-6 md:px-10 lg:px-20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          {/* Gambar  */}
+          {/* Gambar - Foto Keluarga Puskesmas dari profilPuskesmas */}
           <div className="flex justify-center">
             <img
-              src={FotoKeluarga}
+              src={profilPuskesmas.foto_bersama || "/default-foto-bersama.jpg"} // Gunakan foto dari context atau default
               alt="Foto Keluarga Puskesmas"
               className="rounded-lg shadow-lg w-full max-w-[500px] md:max-w-[600px] object-cover"
             />
           </div>
 
-          {/* Konten Teks  */}
+          {/* Konten Teks - Judul dan Deskripsi dari profilPuskesmas */}
           <div className="md:order-last" id="konten">
             <h2 className="text-xl font-bold text-orange-600 mb-2">
               Tentang Kami
             </h2>
             <h3 className="text-3xl font-semibold text-gray-800 mb-4">
-              UPTD Puskesmas Jatisawit
+              {profilPuskesmas.judul || "UPTD Puskesmas Jatisawit"}
             </h3>
             <p className="text-lg text-gray-700 leading-relaxed max-w-[600px] break-words">
-              UPTD Puskesmas Kertasemaya adalah Unit Pelaksana Teknis Dinas
-              Kabupaten Indramayu yang bertempat di Kecamatan Kertasemaya, Jl.
-              By Pass Tulungagung dengan wilayah kerja meliputi 13 desa, yaitu
-              Desa Tulungagung, Desa Kertasemaya, Desa Kilwed, Desa Sukawera,
-              Desa Jengkok, Desa Lemah Ayu, Desa Manguntara, Desa
-              Tegalwirangrong, Desa Tenajar Kidul, Desa Tenajar, Desa Tenajar
-              Lor, Desa Jambe, dan Desa Larangan Jambe. Puskesmas kami adalah
-              Puskesmas Perdesaan dan juga termasuk puskesmas non rawat inap.
-              Kami selalu berupaya memberikan pelayanan prima dengan sepenuh
-              hati bagi para pengguna layanan kami.
+              {profilPuskesmas.deskripsi_profil ||
+                "UPTD Puskesmas Kertasemaya adalah Unit Pelaksana Teknis Dinas Kabupaten Indramayu yang bertempat di Kecamatan Kertasemaya, Jl. By Pass Tulungagung dengan wilayah kerja meliputi 13 desa, yaitu Desa Tulungagung, Desa Kertasemaya, Desa Kilwed, Desa Sukawera, Desa Jengkok, Desa Lemah Ayu, Desa Manguntara, Desa Tegalwirangrong, Desa Tenajar Kidul, Desa Tenajar, Desa Tenajar Lor, Desa Jambe, dan Desa Larangan Jambe. Puskesmas kami adalah Puskesmas Perdesaan dan juga termasuk puskesmas non rawat inap. Kami selalu berupaya memberikan pelayanan prima dengan sepenuh hati bagi para pengguna layanan kami."}
             </p>
 
             <div className="mt-6">
@@ -80,9 +73,9 @@ const HomePage = () => {
           <ServiceCard title="Pemeriksaan Umum" />
           <ServiceCard title="Kesehatan Gigi & Mulut" />
           <ServiceCard title="Kesehatan Ibu & Anak (KIA)" />
-          <ServiceCard title="Manajemen Terpadu Balita Sakit (MTBS)" />
-          <ServiceCard title="Layanan Gawat Darurat (UGD)" />
-          <ServiceCard title="Pemeriksaan TB Paru" />
+          <ServiceCard title="Kesehatan Kerja" />
+          <ServiceCard title="Kesehatan Tradisional" />
+          <ServiceCard title="Penyakit Tidak Menular" />
           <ServiceCard title="Kefarmasian" />
           <ServiceCard title="Laboratorium" />
           <ServiceCard title="Vaksinasi & Imunisasi" />
@@ -96,28 +89,18 @@ const HomePage = () => {
         </h2>
 
         {/* Wrapper Flex */}
-        <div className=" flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Kiri - 60% */}
           <div className="bg-orange-100 p-6 rounded-lg shadow-md lg:w-3/4 w-full flex flex-col">
             <p className="text-gray-800 text-xl leading-relaxed mb-4">
-              Stunting adalah kondisi gagal tumbuh pada anak balita akibat
-              kekurangan gizi kronis dan infeksi berulang terutama dalam 1.000
-              Hari Pertama Kehidupan (HPK). Anak yang mengalami stunting akan
-              lebih pendek dari anak seusianya dan memiliki risiko gangguan
-              perkembangan otak.
+              {edukasiStunting.judul || "Stunting adalah kondisi gagal tumbuh pada anak balita"}: {edukasiStunting.deskripsi ||
+                "Stunting adalah kondisi gagal tumbuh pada anak balita akibat kekurangan gizi kronis dan infeksi berulang terutama dalam 1.000 Hari Pertama Kehidupan (HPK). Anak yang mengalami stunting akan lebih pendek dari anak seusianya dan memiliki risiko gangguan perkembangan otak."}
             </p>
             <p className="text-gray-800 text-xl leading-relaxed mb-4">
-              Penyebab stunting antara lain adalah asupan gizi yang tidak
-              adekuat dalam jangka waktu lama, infeksi berulang, dan kurangnya
-              stimulasi psikososial. Dampak jangka panjangnya meliputi
-              menurunnya kemampuan kognitif, risiko penyakit tidak menular saat
-              dewasa, hingga penurunan produktivitas.
+              Penyebab stunting antara lain adalah asupan gizi yang tidak adekuat dalam jangka waktu lama, infeksi berulang, dan kurangnya stimulasi psikososial. Dampak jangka panjangnya meliputi menurunnya kemampuan kognitif, risiko penyakit tidak menular saat dewasa, hingga penurunan produktivitas.
             </p>
             <p className="text-gray-800 text-xl leading-relaxed mb-4">
-              Pencegahan stunting dimulai sejak masa kehamilan, dengan
-              pemantauan gizi ibu hamil, pemberian ASI eksklusif, pemberian
-              MP-ASI yang tepat, imunisasi lengkap, sanitasi yang baik, dan
-              stimulasi perkembangan anak secara optimal.
+              Pencegahan stunting dimulai sejak masa kehamilan, dengan pemantauan gizi ibu hamil, pemberian ASI eksklusif, pemberian MP-ASI yang tepat, imunisasi lengkap, sanitasi yang baik, dan stimulasi perkembangan anak secara optimal.
             </p>
             <div className="text-center mt-6">
               <a

@@ -91,42 +91,37 @@ const KlasifikasiPage = () => {
   };
 
   const handleDownload = async () => {
-    const token = localStorage.getItem("token");
-    if (!token || !hasil?.classification_id) {
-      toast.error("Anda harus login dan memiliki hasil untuk mengunduh.");
-      return;
-    }
+  const token = localStorage.getItem("token");
+  if (!token || !hasil?.classification_id) {
+    toast.error("Anda harus login dan memiliki hasil untuk mengunduh.");
+    return;
+  }
 
-    try {
-      const response = await api.get(
-        `/export/${hasil.classification_id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'text/plain',
-          },
-          responseType: 'blob', // penting!
-        }
-      );
+  try {
+    const response = await api.get(`/export/${hasil.classification_id}`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: "text/plain" },
+      responseType: "blob",
+    });
 
-      if (!response || !response.data) {
-  throw new Error("Gagal mengunduh file");
-}
-
-      const blob = new Blob([response.data], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `hasil_klasifikasi.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Gagal mengunduh:", error);
+    const blob = new Blob([response.data], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `hasil_klasifikasi_${hasil.classification_id}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+    toast.success("Berhasil mengunduh!");
+  } catch (error) {
+    console.error("Gagal mengunduh:", error);
+    if (error.response && error.response.status === 404) {
+      toast.error("File tidak ditemukan di server. Silakan coba lagi atau hubungi admin.");
+    } else {
       toast.error("Terjadi kesalahan saat mengunduh hasil.");
     }
-  };
+  }
+};
 
   return (
     <div className="font-sans">

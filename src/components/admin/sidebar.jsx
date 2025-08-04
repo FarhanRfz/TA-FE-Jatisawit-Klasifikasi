@@ -7,7 +7,7 @@ const SidebarAdmin = () => {
   const menuItems = [
     { icon: "/Iconts/pc-member-icon.svg", title: "Data Balita", link: "/admin/data-balita" },
     { icon: "/Iconts/cpc-gallery-icon.svg", title: "Konten", link: "/admin/konten" },
-    { icon: "/Iconts/pm-penyulingan.svg", title: "Riwayat Klasifikasi", link: "/admin/manajemen-admin" },
+    { icon: "/Iconts/pm-penyulingan.svg", title: "Riwayat Klasifikasi", link: "/admin/riwayat-klasifikasi" },
   ];
 
   return (

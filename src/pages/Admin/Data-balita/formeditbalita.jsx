@@ -7,16 +7,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
-const FormAddBalita = ({ onClose, onSubmit }) => {
-  const [namaAnak, setNamaAnak] = useState("");
-  const [namaIbu, setNamaIbu] = useState("");
-  const [namaBapak, setNamaBapak] = useState("");
-  const [jenisKelaminAnak, setJenisKelaminAnak] = useState("Laki-Laki");
-  const [golDarahAnak, setGolDarahAnak] = useState("");
-  const [tanggalLahirAnak, setTanggalLahirAnak] = useState("");
-  const [pekerjaanIbu, setPekerjaanIbu] = useState("");
-  const [alamatRumah, setAlamatRumah] = useState("");
-  const [status, setStatus] = useState("aktif");
+const FormEditBalita = ({ onClose, onUpdate, initialData }) => {
+  const [namaAnak, setNamaAnak] = useState(initialData.nama_anak || "");
+  const [namaIbu, setNamaIbu] = useState(initialData.nama_ibu || "");
+  const [namaBapak, setNamaBapak] = useState(initialData.nama_bapak || "");
+  const [jenisKelaminAnak, setJenisKelaminAnak] = useState(
+    initialData.jenis_kelamin_anak === "L" ? "Laki-Laki" : "Perempuan"
+  );
+  const [golDarahAnak, setGolDarahAnak] = useState(initialData.gol_darah_anak || "");
+  const [tanggalLahirAnak, setTanggalLahirAnak] = useState(
+    initialData.tanggal_lahir_anak ? initialData.tanggal_lahir_anak.split("-").reverse().join("-") : ""
+  );
+  const [pekerjaanIbu, setPekerjaanIbu] = useState(initialData.pekerjaan_ibu || "");
+  const [alamatRumah, setAlamatRumah] = useState(initialData.alamat_rumah || "");
+  const [status, setStatus] = useState(initialData.status || "aktif");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [isSuccess, setIsSuccess] = useState(true);
@@ -29,7 +33,7 @@ const FormAddBalita = ({ onClose, onSubmit }) => {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
-    const newBalita = {
+    const updatedBalita = {
       nama_anak: namaAnak,
       nama_ibu: namaIbu,
       nama_bapak: namaBapak,
@@ -42,24 +46,14 @@ const FormAddBalita = ({ onClose, onSubmit }) => {
     };
 
     try {
-      const response = await api.post("/admin/ortu-anak", newBalita, token);
-      console.log("Balita added:", response);
+      const response = await api.put(`/admin/ortu-anak/${initialData.id_ota}`, updatedBalita, token);
+      console.log("Balita updated:", response);
 
-      setNamaAnak("");
-      setNamaIbu("");
-      setNamaBapak("");
-      setJenisKelaminAnak("Laki-Laki");
-      setGolDarahAnak("");
-      setTanggalLahirAnak("");
-      setPekerjaanIbu("");
-      setAlamatRumah("");
-      setStatus("aktif");
+      toast.success("Data balita berhasil diperbarui!");
 
-      toast.success("Data balita berhasil ditambahkan");
-
-      if (onSubmit) {
-        const newEntry = { ...newBalita, id_ota: response.data.data.id_ota };
-        onSubmit(newEntry);
+      if (onUpdate) {
+        const updatedEntry = { ...updatedBalita, id_ota: initialData.id_ota };
+        onUpdate(updatedEntry);
       }
 
       setTimeout(() => {
@@ -68,9 +62,9 @@ const FormAddBalita = ({ onClose, onSubmit }) => {
         setIsSubmitting(false);
       }, 2000);
     } catch (error) {
-      console.error("Error menambahkan data balita:", error.message);
+      console.error("Error updating data balita:", error.message);
       setIsSuccess(false);
-      toast.error(`Gagal menambahkan data balita: ${error.message}`);
+      toast.error(`Gagal memperbarui data balita: ${error.message}`);
       setIsSubmitting(false);
     }
   };
@@ -204,4 +198,4 @@ const FormAddBalita = ({ onClose, onSubmit }) => {
   );
 };
 
-export default FormAddBalita;
+export default FormEditBalita;

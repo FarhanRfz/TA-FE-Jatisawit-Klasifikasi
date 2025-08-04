@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Table from "../../../layouts/table/tabel";
 import api from "../../../api";
 import Buttonsave from "../../../components/button/button-save";
 import Buttoncancel from "../../../components/button/button-cancel";
@@ -18,7 +17,7 @@ const Umum = () => {
   const [kontakList, setKontakList] = useState([]);
 
   const [selectedData, setSelectedData] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editJenisKontak, setEditJenisKontak] = useState("");
   const [editLinkKontak, setEditLinkKontak] = useState("");
 
@@ -109,19 +108,7 @@ const Umum = () => {
 
   const handleEdit = (item) => {
     setSelectedData(item);
-    setIsEditing(true);
-    toast.warn(
-      <div>
-        <p>Edit kontak: {item.jenis_kontak}</p>
-        <button
-          onClick={() => { setIsModalEditOpen(true); toast.dismiss(); }}
-          className="mt-2 px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Lanjutkan Edit
-        </button>
-      </div>,
-      { position: "top-right", autoClose: false, closeButton: true }
-    );
+    setIsEditModalOpen(true);
   };
 
   const handleSubmitEdit = async (e) => {
@@ -134,7 +121,7 @@ const Umum = () => {
         link_kontak: editLinkKontak,
       });
       toast.success("Kontak berhasil diubah", { position: "top-right", autoClose: 3000 });
-      setIsEditing(false);
+      setIsEditModalOpen(false);
       setSelectedData(null);
       await fetchKontak();
     } catch (error) {
@@ -182,7 +169,7 @@ const Umum = () => {
 
     try {
       await api.delete(`/puskesmas-kontak/${id}`);
-      toast.success("Kontak berhasil dihapus", { position: "top-right", autoClose: 3000 }); // Hanya satu panggilan
+      toast.success("Kontak berhasil dihapus", { position: "top-right", autoClose: 3000 });
       await fetchKontak();
       setSelectedData(null);
     } catch (error) {
@@ -192,10 +179,8 @@ const Umum = () => {
   };
 
   const handleCloseEditModal = () => {
-    setIsModalEditOpen(false);
+    setIsEditModalOpen(false);
     setSelectedData(null);
-    setIsEditing(false);
-    fetchKontak();
   };
 
   const handleSaveAboutApp = async () => {
@@ -351,63 +336,92 @@ const Umum = () => {
       {/* Tabel Kontak */}
       <div className="mt-8">
         <h3 className="text-lg font-semibold mb-2">Daftar Kontak</h3>
-        <Table
-          tableData={kontakList}
-          columns={[
-            { label: "No", key: "no" },
-            { label: "Jenis", key: "jenis_kontak" },
-            { label: "Link", key: "link_kontak" },
-          ]}
-          units={["", ""]}
-          onShow={handleShow}
-          onEdit={handleEdit}
-          onDelete={handleDeleteClick}
-          buttons={{ show: true, edit: true, delete: true }}
-          idKey="id_contacts"
-          actions={actions}
-        />
+        <div className="bg-red-200 shadow-md rounded-lg overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-red-200">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">No</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">Jenis</th>
+                <th className="px-30 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">Link</th>
+                <th className="px-8 py-3 text-left text-xs font-medium text-black uppercase tracking-wider w-32">Aksi</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {kontakList.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="px-4 py-4 text-center text-gray-600">
+                    Tidak ada data kontak.
+                  </td>
+                </tr>
+              ) : (
+                kontakList.map((item) => (
+                  <tr key={item.id_contacts} className="hover:bg-gray-50 transition-colors duration-200">
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{item.no}</div>
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{item.jenis_kontak}</div>
+                    </td>
+                    <td className="px-4 py-4 break-words">
+                      <div className="text-sm text-gray-900">{item.link_kontak}</div>
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                      <button
+                        onClick={() => handleEdit(item)}
+                        className="text-blue-600 hover:text-yellow-900 transition-colors duration-200 mr-2"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClick(item)}
+                        className="text-red-600 hover:text-red-900 transition-colors duration-200"
+                      >
+                        Hapus
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Modal untuk Edit */}
-      {isEditing && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[42rem]">
-            <h4 className="text-lg font-semibold mb-4">Ubah Data Kontak</h4>
-            <p className="text-gray-800 text-sm mb-2">Perubahan data Kontak<br />Pastikan data yang Anda masukkan sudah benar!</p>
-            <hr className="border-2 border-teal-500 mt-2" />
-            <form onSubmit={handleSubmitEdit} className="p-6">
-              <div className="flex items-center mt-2">
-                <label className="basis-[30%] block text-sm font-medium text-gray-700">Jenis Kontak</label>
-                <div className="flex basis-[70%]">
-                  <select
-                    value={editJenisKontak}
-                    onChange={(e) => setEditJenisKontak(e.target.value)}
-                    className="border border-gray-300 rounded-l-lg px-2 py-1 w-full"
-                  >
-                    <option value="">Pilih Jenis Kontak</option>
-                    {semuaJenisKontak.map((jenis, index) => (
-                      <option key={index} value={jenis}>
-                        {jenis}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+      {isEditModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h4 className="text-lg font-semibold mb-4 text-center">Edit Kontak</h4>
+            <form onSubmit={handleSubmitEdit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Jenis Kontak</label>
+                <select
+                  value={editJenisKontak}
+                  onChange={(e) => setEditJenisKontak(e.target.value)}
+                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                  required
+                >
+                  <option value="">Pilih Jenis Kontak</option>
+                  {semuaJenisKontak.map((jenis, index) => (
+                    <option key={index} value={jenis}>
+                      {jenis}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <div className="flex items-center mt-2">
-                <label className="basis-[30%] block text-sm font-medium text-gray-700">Link Kontak</label>
-                <div className="flex basis-[70%]">
-                  <input
-                    type="text"
-                    value={editLinkKontak}
-                    onChange={(e) => setEditLinkKontak(e.target.value)}
-                    className="border border-gray-300 rounded-l-lg px-2 py-1 w-full"
-                    required
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Link Kontak</label>
+                <input
+                  type="text"
+                  value={editLinkKontak}
+                  onChange={(e) => setEditLinkKontak(e.target.value)}
+                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                  required
+                />
               </div>
-              <div className="mt-6 flex justify-start gap-4">
-                <Buttonsave text="Simpan Perubahan" type="submit" />
+              <div className="flex justify-end gap-4">
                 <Buttoncancel text="Batal" onClick={handleCloseEditModal} />
+                <Buttonsave text="Simpan" type="submit" />
               </div>
             </form>
           </div>

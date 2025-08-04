@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { toast } from 'react-toastify';
+import api from "../api";
 
 const EditProfile = () => {
   const [formData, setFormData] = useState({
@@ -15,7 +16,7 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/user", {
+        const response = await api.get("/user", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const { username, email, nama_lengkap_orangtua } = response.data.data;
@@ -48,11 +49,9 @@ const EditProfile = () => {
       return;
     }
 
-    axios
-  .put(
-    "http://localhost:8000/api/user/update",
+    api.put(
+    "/user/update",
     {
-      email: formData.email || undefined,
       nama_lengkap_orangtua: formData.nama_lengkap_orangtua || undefined,
       password: formData.newPassword || undefined,
       password_confirmation: formData.confirmPassword || undefined,
@@ -62,11 +61,11 @@ const EditProfile = () => {
     }
   )
       .then((res) => {
-        alert("Profil berhasil diperbarui!");
+        toast.success("Profil berhasil diperbarui!");
       })
       .catch((err) => {
         console.error("Gagal memperbarui profil:", err);
-        alert(
+        toast.error(
           "Gagal memperbarui profil! " +
             (err.response?.data?.message || "Silakan coba lagi.")
         );
@@ -101,8 +100,9 @@ const EditProfile = () => {
               type="email"
               name="email"
               value={formData.email}
+              disabled
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-600"
               required
             />
           </div>

@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import {ToastContainer, toast} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import PrivateRoute from "./components/PrivateRoute";
 
 import GeneralLayouts from "./layouts/GeneralLayout";
 import HomePage from "./pages/HomePage";
@@ -13,6 +15,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import DataBalita from "./pages/Admin/Data-balita/DataBalita";
 import EdukasiStuntingPage from "./pages/EdukasiStuntingPage";
 import KontenPage from "./pages/Admin/Konten/KontenPage";
+import RiwayatKlasifikasiPageAdmin from "./pages/Admin/RiwayatKlasifikasi/RiwayatKlasifikasiAdmin";
 
 import AdminPage from "./pages/Admin/AdminPage";
 import LoginPage from "./pages/Admin/LoginPage";
@@ -21,44 +24,99 @@ import RegistrasiPage from "./pages/Admin/RegistrasiPage";
 import ForgotPasswordPage from "./pages/Admin/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/Admin/ResetPassword";
 
-// Komponen PrivateRoute untuk proteksi route
-const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem('token');
-  return token ? children : <Navigate to="/" />;
-};
-
 function App() {
+  useEffect(() => {
+    const handleUnload = () => {
+      localStorage.removeItem("token");
+    };
+    window.addEventListener("beforeunload", handleUnload);
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, []);
+
   return (
     <Router>
       <Routes>
         <Route element={<GeneralLayouts />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/klasifikasi" element={<KlasifikasiPage />} />
+
+          {/* Proteksi halaman klasifikasi dan riwayat */}
+          <Route
+            path="/klasifikasi"
+            element={
+              <PrivateRoute>
+                <KlasifikasiPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/riwayat-klasifikasi"
+            element={
+              <PrivateRoute>
+                <HistoryPage />
+              </PrivateRoute>
+            }
+          />
+
           <Route path="/profil" element={<ProfilPage />} />
           <Route path="/edit-profile" element={<EditProfileUser />} />
           <Route path="/Edukasi-Stunting" element={<EdukasiStuntingPage />} />
-          <Route path="/riwayat-klasifikasi" element={<HistoryPage />} />
         </Route>
+
+        {/* Auth Pages */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/registrasi" element={<RegistrasiPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+        {/* Admin */}
+        <Route
+          path="/admin/*"
+          element={
+            <PrivateRoute>
+              <AdminPage />
+            </PrivateRoute>
+          }
+        />
+        <Route 
+          path="/admin/Data-Balita" 
+          element={
+            <PrivateRoute>
+              <DataBalita />
+            </PrivateRoute>
+          }
+          />
+        <Route 
+          path="/admin/Konten" 
+          element={
+            <PrivateRoute>
+              <KontenPage />
+            </PrivateRoute>
+          }
+          />
+        <Route
+          path="/admin/Riwayat-Klasifikasi"
+          element={
+            <PrivateRoute>
+              <RiwayatKlasifikasiPageAdmin />
+            </PrivateRoute>
+          }
+        />
+
+        {/* 404 */}
         <Route path="/*" element={<NotFoundPage />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/admin/Data-Balita" element={<DataBalita/>} />
-        <Route path="/admin/Konten" element={<KontenPage/>} />
       </Routes>
-      <ToastContainer 
-        position="top-center" 
-        autoClose={2000} 
+
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
-        closeOnClick 
+        closeOnClick
         rtl={false}
         pauseOnFocusLoss
-        pauseOnHover 
-        draggable 
-        />
+        pauseOnHover
+        draggable
+      />
     </Router>
   );
 }

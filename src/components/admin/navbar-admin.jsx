@@ -44,7 +44,7 @@ const NavbarAdmin = ({ toggleSidebar }) => {
             </div>
             <div className="admin-button flex items-center space-x-4">
                 <span className="font-bold text-teal-700 mr-4">Admin</span>
-                <div className="user-admin h-10 w-10 rounded-full flex items-center space-x-2 p-2 bg-[#1E5454]">
+                <div className="user-admin h-10 w-10 rounded-full flex items-center space-x-2 p-3 bg-[#1E5454]">
                     <img
                         src="/public/Iconts/user-solid-white.svg"
                         alt="Icon Admin"
@@ -53,7 +53,7 @@ const NavbarAdmin = ({ toggleSidebar }) => {
                 </div>
                 <button
                     onClick={handleLogout}
-                    className="text-red-500 hover:text-red-700 font-semibold text-sm"
+                    className="rounded-full items-center space-x-2 p-3 bg-red-500 text-white hover:bg-red-800 font-semibold text-sm"
                 >
                     Logout
                 </button>
