@@ -85,7 +85,7 @@ const HomePage = () => {
       {/* Edukasi Stunting */}
       <section className="pt-4 pb-12 px-6 md:px-20 bg-white">
         <h2 className="text-3xl font-bold text-orange-600 text-center mb-6">
-          Edukasi Stunting
+          {edukasiStunting.judul || "Edukasi Stunting"}
         </h2>
 
         {/* Wrapper Flex */}
@@ -93,14 +93,8 @@ const HomePage = () => {
           {/* Kiri - 60% */}
           <div className="bg-orange-100 p-6 rounded-lg shadow-md lg:w-3/4 w-full flex flex-col">
             <p className="text-gray-800 text-xl leading-relaxed mb-4">
-              {edukasiStunting.judul || "Stunting adalah kondisi gagal tumbuh pada anak balita"}: {edukasiStunting.deskripsi ||
+              {edukasiStunting.deskripsi ||
                 "Stunting adalah kondisi gagal tumbuh pada anak balita akibat kekurangan gizi kronis dan infeksi berulang terutama dalam 1.000 Hari Pertama Kehidupan (HPK). Anak yang mengalami stunting akan lebih pendek dari anak seusianya dan memiliki risiko gangguan perkembangan otak."}
-            </p>
-            <p className="text-gray-800 text-xl leading-relaxed mb-4">
-              Penyebab stunting antara lain adalah asupan gizi yang tidak adekuat dalam jangka waktu lama, infeksi berulang, dan kurangnya stimulasi psikososial. Dampak jangka panjangnya meliputi menurunnya kemampuan kognitif, risiko penyakit tidak menular saat dewasa, hingga penurunan produktivitas.
-            </p>
-            <p className="text-gray-800 text-xl leading-relaxed mb-4">
-              Pencegahan stunting dimulai sejak masa kehamilan, dengan pemantauan gizi ibu hamil, pemberian ASI eksklusif, pemberian MP-ASI yang tepat, imunisasi lengkap, sanitasi yang baik, dan stimulasi perkembangan anak secara optimal.
             </p>
             <div className="text-center mt-6">
               <a

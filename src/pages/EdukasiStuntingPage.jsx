@@ -17,7 +17,6 @@ const EdukasiStuntingPage = () => {
             </p>
           <p className="text-gray-800 text-base leading-relaxed mb-4">Penyebab utama stunting meliputi:</p>
           <ul className="list-disc list-inside mt-2 ml-4">{(edukasiStunting.informasi_stunting || "").split("\n").map((item, index) => <li key={index}>{item}</li>)}</ul>
-          <p className="text-sm text-gray-600 mt-6 italic">Sumber: Kementerian Kesehatan Republik Indonesia – Ayosehat.kemkes.go.id</p>
         </div>
       </div>
     </div>

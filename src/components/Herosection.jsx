@@ -43,7 +43,7 @@ return (
     </div>
 
     {/* Button 1 */}
-    <div className="absolute my-18 top-48 left-10 lg:top-100 lg:left-46 flex space-x-4 z-30">
+    <div className="absolute my-18 top-48 left-34 lg:top-100 lg:left-176 flex space-x-4 z-30">
         {showButton1 && (
         <Button
             onClick={() => handleButtonClick(scrollTarget1)}
