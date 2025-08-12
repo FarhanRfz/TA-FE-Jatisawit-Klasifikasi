@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import PrivateRoute from "./components/PrivateRoute";
@@ -11,12 +11,10 @@ import KlasifikasiPage from "./pages/KlasifikasiPage";
 import HistoryPage from "./pages/RiwayatKlasifikasiPage";
 import ProfilPage from "./pages/ProfilPage";
 import NotFoundPage from "./pages/NotFoundPage";
-
 import DataBalita from "./pages/Admin/Data-balita/DataBalita";
 import EdukasiStuntingPage from "./pages/EdukasiStuntingPage";
 import KontenPage from "./pages/Admin/Konten/KontenPage";
 import RiwayatKlasifikasiPageAdmin from "./pages/Admin/RiwayatKlasifikasi/RiwayatKlasifikasiAdmin";
-
 import AdminPage from "./pages/Admin/AdminPage";
 import LoginPage from "./pages/Admin/LoginPage";
 import EditProfileUser from "./pages/EditProfilePage";
@@ -25,21 +23,26 @@ import ForgotPasswordPage from "./pages/Admin/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/Admin/ResetPassword";
 
 function App() {
-  useEffect(() => {
-    const handleUnload = () => {
-      localStorage.removeItem("token");
+useEffect(() => {
+    const fetchCsrfCookie = async () => {
+      try {
+        await fetch('/sanctum/csrf-cookie', {
+          credentials: "include", // Pastikan cookie dikirim
+        });
+        console.log("CSRF cookie fetched successfully");
+      } catch (error) {
+        console.error("Failed to fetch CSRF cookie:", error);
+      }
     };
-    window.addEventListener("beforeunload", handleUnload);
-    return () => window.removeEventListener("beforeunload", handleUnload);
-  }, []);
 
+    fetchCsrfCookie();
+  }, []);
   return (
     <Router>
       <Routes>
         <Route element={<GeneralLayouts />}>
           <Route path="/" element={<HomePage />} />
-
-          {/* Proteksi halaman klasifikasi dan riwayat */}
+          <Route path="/profil" element={<ProfilPage />} />
           <Route
             path="/klasifikasi"
             element={
@@ -56,19 +59,13 @@ function App() {
               </PrivateRoute>
             }
           />
-
-          <Route path="/profil" element={<ProfilPage />} />
           <Route path="/edit-profile" element={<EditProfileUser />} />
           <Route path="/Edukasi-Stunting" element={<EdukasiStuntingPage />} />
         </Route>
-
-        {/* Auth Pages */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/registrasi" element={<RegistrasiPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
-
-        {/* Admin */}
         <Route
           path="/admin/*"
           element={
@@ -77,22 +74,22 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route 
-          path="/admin/Data-Balita" 
+        <Route
+          path="/admin/Data-Balita"
           element={
             <PrivateRoute>
               <DataBalita />
             </PrivateRoute>
           }
-          />
-        <Route 
-          path="/admin/Konten" 
+        />
+        <Route
+          path="/admin/Konten"
           element={
             <PrivateRoute>
               <KontenPage />
             </PrivateRoute>
           }
-          />
+        />
         <Route
           path="/admin/Riwayat-Klasifikasi"
           element={
@@ -101,11 +98,8 @@ function App() {
             </PrivateRoute>
           }
         />
-
-        {/* 404 */}
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
-
       <ToastContainer
         position="top-center"
         autoClose={2000}

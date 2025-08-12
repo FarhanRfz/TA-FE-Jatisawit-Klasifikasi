@@ -481,7 +481,7 @@ const DataBalita = () => {
         )}
 
         {showConfirm && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-25">
+          <div className="fixed inset-0 flex items-center justify-center bg-transparent bg-opacity-25">
             <div className="bg-white p-6 rounded-lg shadow-lg">
               <h4 className="text-lg font-semibold mb-4">Konfirmasi Hapus</h4>
               <p>Apakah Anda yakin ingin menghapus data ini?</p>

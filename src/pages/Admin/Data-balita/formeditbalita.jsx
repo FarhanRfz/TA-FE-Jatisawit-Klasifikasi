@@ -163,20 +163,6 @@ const FormEditBalita = ({ onClose, onUpdate, initialData }) => {
             <option value="O">O</option>
           </select>
         </div>
-        {/* <div>
-          <label htmlFor="status" className="block font-medium text-sm mb-1">
-            Status
-          </label>
-          <select
-            id="status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          >
-            <option value="aktif">Aktif</option>
-            <option value="nonaktif">Nonaktif</option>
-          </select>
-        </div> */}
         <div className="col-span-2 mt-4 mb-14 flex justify-end">
           <Buttonsave type="submit" text="Simpan" disabled={isSubmitting} />
         </div>

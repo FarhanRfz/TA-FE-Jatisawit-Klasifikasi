@@ -3,6 +3,7 @@ import { useAppContext } from "../context/AppContext"; // Impor useAppContext
 import bangunanPuskesmas from "../assets/image/bangunan puskesmas jtswit.jpg";
 import HeroSection from "../components/Herosection";
 import ServiceCard from "../components/ServiceCard";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   const { profilPuskesmas, edukasiStunting } = useAppContext(); // Ambil data dari context
@@ -48,12 +49,12 @@ const HomePage = () => {
             </p>
 
             <div className="mt-6">
-              <a
-                href="/profil"
+              <Link
+                to="/profil"
                 className="inline-block bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600 transition"
               >
                 Baca Selengkapnya
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -97,12 +98,12 @@ const HomePage = () => {
                 "Stunting adalah kondisi gagal tumbuh pada anak balita akibat kekurangan gizi kronis dan infeksi berulang terutama dalam 1.000 Hari Pertama Kehidupan (HPK). Anak yang mengalami stunting akan lebih pendek dari anak seusianya dan memiliki risiko gangguan perkembangan otak."}
             </p>
             <div className="text-center mt-6">
-              <a
-                href="/edukasi-stunting"
+              <Link
+                to="/edukasi-stunting"
                 className="inline-block bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600 transition"
               >
                 Baca Selengkapnya
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -117,12 +118,12 @@ const HomePage = () => {
 
             {/* Tombol opsional */}
             <div className="mt-4">
-              <a
-                href="/klasifikasi"
+              <Link
+                to="/klasifikasi"
                 className="bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-md h-7 px-2 text-[18px] lg:h-auto lg:p-3 lg:text-xl inline-block text-center"
               >
                 Cek Sekarang
-              </a>
+              </Link>
             </div>
           </div>
         </div>

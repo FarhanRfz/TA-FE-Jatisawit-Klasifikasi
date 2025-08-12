@@ -1,5 +1,6 @@
+// Footer.jsx
 import { Instagram, Facebook, Twitter } from "lucide-react";
-import { RiTiktokFill } from "react-icons/ri"; // Ikon TikTok dari react-icons
+import { RiTiktokFill } from "react-icons/ri";
 import { useAppContext } from "../context/AppContext";
 import { Link } from "react-router-dom";
 
@@ -21,13 +22,13 @@ const Footer = () => {
             Kode Pos 45273
           </p>
         </div>
-        <div><a href="/" className="font-bold mb-2 hover:underline">Beranda</a></div>
-        <div><a href="/Profil" className="font-bold mb-2 hover:underline">Profil</a></div>
+        <div><Link to="/" className="font-bold mb-2 hover:underline">Beranda</Link></div>
+        <div><Link to="/profil" className="font-bold mb-2 hover:underline">Profil</Link></div>
         <div>
           <h4 className="font-bold mb-2">Layanan</h4>
           <ul className="space-y-1 text-sm">
-            <li><a href="/Klasifikasi" className="hover:underline">Klasifikasi</a></li>
-            <li><a href="/Edukasi-Stunting" className="hover:underline">Edukasi</a></li>
+            <li><Link to="/klasifikasi" className="hover:underline">Klasifikasi</Link></li>
+            <li><Link to="/Edukasi-Stunting" className="hover:underline">Edukasi</Link></li>
           </ul>
         </div>
         <div>
@@ -39,9 +40,6 @@ const Footer = () => {
             <a href={getSocialLink("Facebook")} target="_blank" rel="noopener noreferrer">
               <Facebook className="hover:text-gray-200 cursor-pointer w-6 h-6" />
             </a>
-            {/* <a href={getSocialLink("Twitter")} target="_blank" rel="noopener noreferrer">
-              <Twitter className="hover:text-gray-200 cursor-pointer w-6 h-6" />
-            </a> */}
             <a href={getSocialLink("Tiktok")} target="_blank" rel="noopener noreferrer">
               <RiTiktokFill className="hover:text-gray-200 cursor-pointer w-6 h-6" />
             </a>
